@@ -10,13 +10,38 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.elanco.ticktracker.dto.SightingRequest;
+import java.util.UUID;
+
 @Service
 public class SightingService
 {
     private final ElancoApiClient elancoApiClient;
     private final SightingRepository sightingRepository;
 
+    public Sighting createUserSighting(SightingRequest request) {
 
+        String latinName = request.latinName();
+
+        if (latinName != null) {
+            latinName = latinName.trim();
+
+            if (latinName.isBlank()) {
+                latinName = null;
+            }
+        }
+
+        Sighting sighting = new Sighting(
+                UUID.randomUUID().toString(),
+                request.date(),
+                request.location().trim(),
+                request.species().trim(),
+                latinName,
+                "USER_REPORTED"
+        );
+
+        return sightingRepository.save(sighting);
+    }
 
     public SightingService(
             ElancoApiClient elancoApiClient,
