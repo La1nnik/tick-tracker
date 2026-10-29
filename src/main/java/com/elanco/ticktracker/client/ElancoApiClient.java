@@ -7,6 +7,12 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+
+import com.elanco.ticktracker.exception.ElancoApiException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
+
 @Service
 public class ElancoApiClient
 {
@@ -19,10 +25,51 @@ public class ElancoApiClient
 
     public List<TickSightingDto> getAllSightings()
     {
-        List<TickSightingDto> sightings = restClient.get()
-                .uri("/data/tick-sightings").retrieve().body(new ParameterizedTypeReference<List<TickSightingDto>>()
-                {});
+        try
+        {
+            List<TickSightingDto> sightings = restClient.get()
+                    .uri("/data/tick-sightings").retrieve().body(new ParameterizedTypeReference<List<TickSightingDto>>()
+                    {
+                    });
 
-        return sightings == null ? List.of() : sightings;
+            return sightings == null ? List.of() : sightings;
+
+        } catch (RestClientResponseException ex)
+        {
+            if (ex.getStatusCode().value() == 429) {
+                throw new ElancoApiException(
+                        "Elanco's API rate limit has been reached. Please try again in about one minute.",
+                        ex
+                );
+            }
+
+            if (ex.getStatusCode().is5xxServerError()) {
+                throw new ElancoApiException(
+                        "Elanco's API is temporarily unavailable. Please try again later.",
+                        ex
+                );
+            }
+
+            throw new ElancoApiException(
+                    "Elanco's API returned an unsuccessful response (HTTP "
+                            + ex.getStatusCode().value() + ").",
+                    ex
+            );
+
+        } catch (ResourceAccessException ex) {
+
+            throw new ElancoApiException(
+                    "Could not connect to Elanco's API. Please try again later.",
+                    ex
+            );
+
+        } catch (RestClientException ex) {
+
+            throw new ElancoApiException(
+                    "Could not process the response from Elanco's API.",
+                    ex
+            );
+        }
+
     }
 }
