@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import java.util.List;
 
 public interface SightingRepository
         extends JpaRepository<Sighting, String> {
@@ -25,4 +27,20 @@ public interface SightingRepository
             @Param("location") String location,
             @Param("species") String species
     );
+
+
+
+    @Query("""
+    SELECT s.location, COUNT(s)
+    FROM Sighting s
+    GROUP BY s.location
+    """)
+    List<Object[]> countSightingsByCity();
+
+    List<Sighting> findAllByOrderByDateAsc();
+
+    List<Sighting> findByLocationIgnoreCaseOrderByDateAsc(
+            String location
+    );
+
 }
