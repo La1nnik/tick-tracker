@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 
 @RestControllerAdvice
-public class GloabalExceptionHandler
+public class GlobalExceptionHandler
 {
-    private static final Logger log = LoggerFactory.getLogger(GloabalExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(
@@ -101,6 +101,19 @@ public class GloabalExceptionHandler
         );
     }
 
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgument(
+            IllegalArgumentException ex,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "Invalid request",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleUnexpectedError(

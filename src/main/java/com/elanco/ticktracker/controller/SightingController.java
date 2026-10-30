@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/sightings")
 public class SightingController
@@ -36,8 +41,27 @@ public class SightingController
     }
 
     @GetMapping
-    public List<Sighting> getAllSightings() {
-        return sightingService.getAllSightings();
+    public List<Sighting> getSightings(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime fromDate,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime toDate,
+
+            @RequestParam(required = false)
+            String location,
+
+            @RequestParam(required = false)
+            String species) {
+
+        return sightingService.searchSightings(
+                fromDate,
+                toDate,
+                location,
+                species
+        );
     }
 
 

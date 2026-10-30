@@ -13,6 +13,8 @@ import java.util.Set;
 import com.elanco.ticktracker.dto.SightingRequest;
 import java.util.UUID;
 
+import java.time.LocalDateTime;
+
 @Service
 public class SightingService
 {
@@ -107,6 +109,38 @@ public class SightingService
         );
 
 
+
+
+    }
+
+
+    public List<Sighting> searchSightings(
+            LocalDateTime fromDate,
+            LocalDateTime toDate,
+            String location,
+            String species) {
+
+        if (fromDate != null && toDate != null
+                && fromDate.isAfter(toDate)) {
+            throw new IllegalArgumentException(
+                    "fromDate must be before or equal to toDate."
+            );
+        }
+
+        String normalizedLocation =
+                location == null || location.isBlank()
+                        ? null : location.trim();
+
+        String normalizedSpecies =
+                species == null || species.isBlank()
+                        ? null : species.trim();
+
+        return sightingRepository.searchSightings(
+                fromDate,
+                toDate,
+                normalizedLocation,
+                normalizedSpecies
+        );
     }
 
     public List<Sighting> getAllSightings() {
