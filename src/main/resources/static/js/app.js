@@ -169,6 +169,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function formatDateTime(dateValue) {
+
+        if (!dateValue) {
+            return "Date unavailable";
+        }
+
+        const date = new Date(dateValue);
+
+        if (Number.isNaN(date.getTime())) {
+            return dateValue;
+        }
+
+        return date.toLocaleString("en-GB", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+
+
+
+
     // creating an element safely using textContent
     function createElement(tag, className, text)
     {
@@ -186,62 +211,292 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    async function shareSighting(sighting, button) {
+
+        const shareText = [
+            `Tick sighting in ${sighting.location}`,
+            `Species: ${sighting.species}`,
+            `Scientific name: ${sighting.latinName || "Not provided"}`,
+            `Date: ${formatDateTime(sighting.date)}`
+        ].join("\n");
+
+        try {
+
+            // Use native sharing where supported
+            if (navigator.share) {
+
+                await navigator.share({
+                    title: "Tick sighting",
+                    text: shareText
+                });
+
+                return;
+            }
+
+            // Otherwise copy the information
+            if (navigator.clipboard && window.isSecureContext) {
+
+                await navigator.clipboard.writeText(shareText);
+
+                const originalText = button.textContent;
+
+                button.textContent = "Copied!";
+
+                window.setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+
+            } else {
+
+                window.prompt(
+                    "Copy this sighting information:",
+                    shareText
+                );
+
+            }
+
+        } catch (error) {
+
+            // Sharing being cancelled is not an application error
+            if (error.name !== "AbortError") {
+
+                window.prompt(
+                    "Copy this sighting information:",
+                    shareText
+                );
+            }
+        }
+    }
+
+
+
 
     function updateMapDetails(city, records) {
 
         const details = document.getElementById("mapDetails");
 
+        // Clear previous city details
         details.replaceChildren();
 
+        // City heading
         const heading = createElement(
             "h3",
             "",
-            `${city} - ${records.length} sightings`
+            city
         );
 
         const description = createElement(
             "p",
             "",
-            "Recent sightings recorded in this city:"
+            `${records.length} recorded sightings in this city.`
         );
 
         details.append(heading, description);
 
-        // Show the latest five sightings
-        const recentSightings = [...records]
+
+        // Calculate the number of different species
+        const uniqueSpecies = new Set(
+            records
+                .map(sighting => sighting.species)
+                .filter(Boolean)
+        );
+
+
+        // City statistics
+        const statistics = createElement(
+            "div",
+            "map-city-statistics",
+            ""
+        );
+
+        const totalStat = createElement(
+            "div",
+            "map-city-stat",
+            ""
+        );
+
+        totalStat.append(
+            createElement("span", "", "Total sightings"),
+            createElement("strong", "", records.length)
+        );
+
+        const speciesStat = createElement(
+            "div",
+            "map-city-stat",
+            ""
+        );
+
+        speciesStat.append(
+            createElement("span", "", "Species recorded"),
+            createElement("strong", "", uniqueSpecies.size)
+        );
+
+        statistics.append(totalStat, speciesStat);
+
+        details.appendChild(statistics);
+
+
+        // Quick actions
+        const actions = createElement(
+            "div",
+            "map-detail-actions",
+            ""
+        );
+
+        // Get directions to the approximate city centre
+        const directionsLink = document.createElement("a");
+
+        directionsLink.className = "directions-button";
+
+        directionsLink.textContent = "Get directions";
+
+        directionsLink.href =
+            `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(city)}`;
+
+        directionsLink.target = "_blank";
+
+        directionsLink.rel = "noopener noreferrer";
+
+        actions.appendChild(directionsLink);
+
+        details.appendChild(actions);
+
+
+        // Timeline heading
+        const timelineHeading = createElement(
+            "h4",
+            "timeline-heading",
+            "Tick activity timeline"
+        );
+
+        const timelineDescription = createElement(
+            "p",
+            "",
+            "Showing the latest 10 sightings, from oldest to newest."
+        );
+
+        details.append(timelineHeading, timelineDescription);
+
+
+        // Sort sightings chronologically
+        const chronologicalSightings = [...records]
             .sort(
                 (a, b) =>
-                    new Date(b.date) - new Date(a.date)
-            )
-            .slice(0, 5);
+                    new Date(a.date) - new Date(b.date)
+            );
 
-        recentSightings.forEach(sighting => {
 
-            const item = createElement(
-                "div",
-                "map-detail-item",
+        // Show the latest 10 records
+        const timelineSightings =
+            chronologicalSightings.slice(-10);
+
+
+        const timeline = createElement(
+            "ol",
+            "sighting-timeline",
+            ""
+        );
+
+
+        //create a timeline entry for each sighting
+        timelineSightings.forEach(sighting => {
+
+            const timelineItem = createElement(
+                "li",
+                "timeline-item",
                 ""
             );
 
+            const timelineContent = createElement(
+                "div",
+                "timeline-content",
+                ""
+            );
+
+
+            // Sighting date
+            const date = createElement(
+                "time",
+                "timeline-date",
+                formatDateTime(sighting.date)
+            );
+
+            if (sighting.date) {
+                date.dateTime = sighting.date;
+            }
+
+
+            // Species name
             const species = createElement(
                 "strong",
                 "",
                 sighting.species || "Unknown species"
             );
 
-            const information = createElement(
-                "span",
+
+            // Scientific name
+            const latinName = createElement(
+                "p",
                 "",
-                `${sighting.latinName || "Scientific name unavailable"} · ${formatDate(sighting.date)}`
+                sighting.latinName || "Scientific name unavailable"
             );
 
-            item.append(species, information);
 
-            details.appendChild(item);
+            // Record source
+            const source = createElement(
+                "span",
+                "timeline-source",
+                sighting.source === "USER_REPORTED"
+                    ? "Community report"
+                    : "Elanco API"
+            );
+
+
+            // Share individual sighting
+            const shareButton = createElement(
+                "button",
+                "share-button",
+                "Share sighting"
+            );
+
+            shareButton.type = "button";
+
+            shareButton.addEventListener("click", () => {
+                shareSighting(sighting, shareButton);
+            });
+
+
+            timelineContent.append(
+                date,
+                species,
+                latinName,
+                source,
+                shareButton
+            );
+
+            timelineItem.appendChild(timelineContent);
+
+            timeline.appendChild(timelineItem);
 
         });
 
+
+        if (timelineSightings.length === 0) {
+
+            timeline.appendChild(
+                createElement(
+                    "li",
+                    "muted",
+                    "No sightings available for this city."
+                )
+            );
+
+        }
+
+        details.appendChild(timeline);
+
     }
+
 
 
     function updateSightingsMap(sightings) {
