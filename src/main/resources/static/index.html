@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TickTracker UK</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/app.js" defer></script>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="container nav-container">
+
+        <a href="/" class="brand">
+            <span class="brand-icon">T</span>
+            <span>TickTracker <span class="brand-light">UK</span></span>
+        </a>
+
+        <nav class="navigation">
+            <a href="#dashboard">Dashboard</a>
+            <a href="#sightings">Sightings</a>
+            <a href="#insights">Insights</a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main class="container" id="dashboard">
+
+    <!-- page introduction -->
+    <section class="hero">
+
+        <div>
+            <p class="eyebrow">UK TICK SIGHTINGS</p>
+
+            <h1>Understand tick activity across the UK.</h1>
+
+            <p class="hero-description">
+                Explore reported tick sightings, discover
+                affected locations and understand activity
+                over time.
+            </p>
+        </div>
+
+        <div class="hero-badge">
+            <span class="status-dot"></span>
+            Community sightings
+        </div>
+
+    </section>
+
+
+    <!-- Summary cards -->
+    <section class="stats-grid">
+
+        <article class="stat-card">
+            <div class="stat-icon">↗</div>
+            <p class="stat-label">Total sightings</p>
+            <h2 id="totalSightings">--</h2>
+            <p class="stat-description">Recorded sightings</p>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon">⌖</div>
+            <p class="stat-label">Cities affected</p>
+            <h2 id="totalCities">--</h2>
+            <p class="stat-description">Unique locations</p>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon">◷</div>
+            <p class="stat-label">Latest sighting</p>
+            <h2 id="latestSighting">--</h2>
+            <p class="stat-description">Most recent report date</p>
+        </article>
+
+    </section>
+
+
+    <!-- Search and filters -->
+    <section class="panel filter-panel">
+
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">EXPLORE THE DATA</p>
+                <h2>Search sightings</h2>
+            </div>
+        </div>
+
+        <form id="filterForm" class="filter-grid">
+
+            <div class="form-group">
+                <label for="fromDate">From date</label>
+                <input type="datetime-local" id="fromDate">
+            </div>
+
+            <div class="form-group">
+                <label for="toDate">To date</label>
+                <input type="datetime-local" id="toDate">
+            </div>
+
+            <div class="form-group">
+                <label for="location">City</label>
+                <input type="text"
+                       id="location"
+                       placeholder="e.g. London">
+            </div>
+
+            <div class="form-group">
+                <label for="species">Species</label>
+                <input type="text"
+                       id="species"
+                       placeholder="e.g. Southern rodent tick">
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="primary-button">
+                    Search sightings
+                </button>
+
+                <button type="reset" class="secondary-button">
+                    Clear filters
+                </button>
+            </div>
+
+        </form>
+
+        <p id="filterMessage" class="message" aria-live="polite"></p>
+
+    </section>
+
+
+    <!-- map and analytics -->
+    <section class="dashboard-grid">
+        <article class="panel map-panel">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">GEOGRAPHICAL OVERVIEW</p>
+                    <h2>UK sightings map</h2>
+                </div>
+
+                <span class="small-tag">City-level data</span>
+            </div>
+
+            <div id="map" class="map-placeholder">
+                <div class="map-placeholder-content">
+                    <span class="map-symbol">⌖</span>
+                    <h3>Interactive map coming next</h3>
+                    <p>
+                        We will display tick sightings across
+                        the UK using city map markers.
+                    </p>
+                </div>
+            </div>
+
+            <p class="footnote">
+                Map locations will represent city centres,
+                not the precise locations of tick sightings.
+            </p>
+
+        </article>
+
+
+        <article class="panel insights-panel" id="insights">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">LOCATION INSIGHTS</p>
+                    <h2>Sightings by city</h2>
+                </div>
+            </div>
+
+            <div id="cityList" class="analytics-list">
+                <p class="muted">Loading city statistics...</p>
+            </div>
+
+            <div class="section-heading trend-heading">
+                <div>
+                    <p class="eyebrow">ACTIVITY OVER TIME</p>
+                    <h2>Weekly trends</h2>
+                </div>
+            </div>
+
+            <div id="trendList" class="analytics-list">
+                <p class="muted">Loading trends...</p>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- Sighting records -->
+    <section class="panel sightings-panel" id="sightings">
+
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">SIGHTING RECORDS</p>
+                <h2>Reported sightings</h2>
+            </div>
+
+            <span id="resultsCount" class="small-tag">
+                Loading...
+            </span>
+        </div>
+
+        <div id="sightingList" class="sighting-list">
+            <p class="muted">Loading sightings...</p>
+        </div>
+
+        <p id="errorMessage" class="error-message"
+           role="alert"></p>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+    <div class="container">
+        <p>TickTracker UK - Educational tick sighting tracker</p>
+        <p>Data sourced from the Elanco educational API and community reports.</p>
+    </div>
+</footer>
+
+</body>
+</html>
