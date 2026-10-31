@@ -3,7 +3,7 @@
 TickTracker UK is a full-stack MVP for exploring tick sightings in the UK and submitting community reports.
 It combines data from Elanco's educational tick-sightings API with locally stored reports, and presents the data through a searchable dashboard, map, and activity summaries.
 
-See the [project documentation](output/pdf/tick-tracker-project-documentation.pdf) for an overview of the architecture, data flow, API, setup, and current limitations.
+See the [project documentation](tick-tracker-project-documentation.pdf) for an overview of the architecture, data flow, API, setup, and current limitations.
 
 ## Features
 
