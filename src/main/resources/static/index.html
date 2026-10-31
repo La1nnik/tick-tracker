@@ -8,7 +8,26 @@
 
     <title>TickTracker UK</title>
 
+    <!-- leaflet map styling -->
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+    />
+
+    <!-- our application styling -->
     <link rel="stylesheet" href="/css/style.css">
+
+    <!-- leaflet js -->
+    <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+            defer>
+    </script>
+
+    <!-- our application js -->
     <script src="/js/app.js" defer></script>
 </head>
 
@@ -150,21 +169,31 @@
                 <span class="small-tag">City-level data</span>
             </div>
 
-            <div id="map" class="map-placeholder">
-                <div class="map-placeholder-content">
-                    <span class="map-symbol">⌖</span>
-                    <h3>Interactive map coming next</h3>
-                    <p>
-                        We will display tick sightings across
-                        the UK using city map markers.
-                    </p>
-                </div>
+            <div
+                    id="map"
+                    class="map-container"
+                    role="region"
+                    aria-label="Interactive map of UK tick sightings">
             </div>
 
-            <p class="footnote">
-                Map locations will represent city centres,
-                not the precise locations of tick sightings.
+            <!-- Details shown when a city marker is clicked -->
+            <div id="mapDetails" class="map-details" aria-live="polite">
+
+                <h3>Explore a city</h3>
+
+                <p>
+                    Select a marker on the map to view its recent
+                    tick sightings.
+                </p>
+
+            </div>
+
+            <p id="mapNotice" class="footnote">
+                Markers represent approximate city-centre locations,
+                not the precise locations of individual tick sightings.
             </p>
+
+
 
         </article>
 
