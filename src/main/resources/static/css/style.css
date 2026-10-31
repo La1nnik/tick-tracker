@@ -691,6 +691,254 @@ body {
 
 
 
+/* educational content */
+
+.education-section {
+    margin: 25px 0;
+    padding: 28px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+}
+
+.education-heading {
+    margin-bottom: 32px;
+    max-width: 650px;
+}
+
+.education-heading h2 {
+    color: var(--green-dark);
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.education-heading > p:last-child,
+.education-subheading > p:last-child {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.education-subheading {
+    margin-bottom: 18px;
+}
+
+.education-subheading h3 {
+    color: var(--green-dark);
+    font-size: 19px;
+    margin-bottom: 5px;
+}
+
+
+/* cards of species */
+
+.species-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.species-card {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #ffffff;
+    transition: transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.species-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.06);
+}
+
+
+.species-tag {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 15px;
+    background: var(--green-light);
+    color: var(--green-primary);
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.species-card h3 {
+    color: var(--green-dark);
+    font-size: 17px;
+    margin-bottom: 3px;
+}
+
+.latin-name {
+    color: var(--green-primary);
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 12px;
+}
+
+.species-card > p:not(.latin-name) {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.species-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 17px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.species-fact strong {
+    color: var(--green-dark);
+    font-size: 12px;
+}
+
+.species-fact span {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+
+/* educational notice*/
+
+.education-notice {
+    margin-top: 22px;
+    padding: 16px;
+    background: #f5f7f5;
+    border-left: 4px solid var(--green-primary);
+    border-radius: 5px;
+}
+
+.education-notice strong {
+    color: var(--green-dark);
+    font-size: 13px;
+}
+
+.education-notice p {
+    margin-top: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* prevention section */
+
+.prevention-section {
+    margin-top: 40px;
+}
+
+.prevention-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.prevention-card {
+    padding: 20px;
+    background: #f8faf8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+
+.prevention-card h3 {
+    color: var(--green-dark);
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.prevention-card p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* extra resources */
+
+.education-resources {
+    margin-top: 35px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+}
+
+.education-resources h3 {
+    font-size: 17px;
+    color: var(--green-dark);
+    margin-bottom: 5px;
+}
+
+.education-resources > p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.resource-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.resource-links a {
+    display: inline-block;
+    padding: 10px 13px;
+    border-radius: 7px;
+    background: var(--green-light);
+    color: var(--green-primary);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.resource-links a:hover {
+    background: #dcebe0;
+    text-decoration: underline;
+}
+
+
+/* education layout which is responsive*/
+
+@media (max-width: 900px) {
+
+    .species-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .education-section {
+        padding: 17px;
+    }
+
+    .species-grid,
+    .prevention-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .education-heading h2 {
+        font-size: 22px;
+    }
+
+    .resource-links {
+        flex-direction: column;
+    }
+
+    .resource-links a {
+        text-align: center;
+    }
+
+}
+
+
+
+
 
 
 
