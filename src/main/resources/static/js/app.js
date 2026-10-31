@@ -989,6 +989,16 @@ document.addEventListener("DOMContentLoaded", () => {
             ? `${dateValue}:00`
             : dateValue;
 
+        // Warn and stop submission if the date is in the future
+        const sightingDate = new Date(dateValue);
+
+        if (sightingDate > new Date()) {
+            reportMessage.className = "form-feedback warning";
+            reportMessage.textContent =
+                "Warning: The sighting date is in the future. Please correct it before submitting.";
+            return;
+        }
+
 
         // Prepare the JSON sent to Spring Boot
         const sightingData = {

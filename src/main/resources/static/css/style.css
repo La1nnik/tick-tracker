@@ -983,6 +983,16 @@ body {
     background: #e8f4eb;
     padding: 12px;
     border-radius: 7px;
+
+
+}
+
+/* Warning feedback */
+.form-feedback.warning {
+    color: #805b00;
+    background: #fff4cc;
+    padding: 12px;
+    border-radius: 7px;
 }
 
 .form-feedback.error {
