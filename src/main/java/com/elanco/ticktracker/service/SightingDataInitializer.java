@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+/** Seeds an empty local database with Elanco records after application startup. */
 @Component
 public class SightingDataInitializer implements ApplicationRunner {
 
@@ -24,6 +25,7 @@ public class SightingDataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        // Preserve existing reports and avoid unnecessary calls to the external API.
         if (sightingRepository.count() > 0) {
             return;
         }
@@ -33,7 +35,7 @@ public class SightingDataInitializer implements ApplicationRunner {
             log.info("Initial Elanco import complete: received={}, imported={}, skipped={}",
                     summary.received(), summary.imported(), summary.skipped());
         } catch (RuntimeException ex) {
-            // Keep the application available if Elanco is temporarily unreachable.
+            // Keep the application available; the manual import endpoint can retry later.
             log.warn("Initial Elanco import failed; use POST /api/sightings/import to retry.", ex);
         }
     }

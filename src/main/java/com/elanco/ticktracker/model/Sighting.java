@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+/** Persisted tick sighting, sourced either from Elanco or a community report. */
 @Entity
 @Table(name = "sightings")
 public class Sighting
@@ -26,6 +27,7 @@ public class Sighting
 
     private String latinName;
 
+    /** Identifies whether this record came from the external API or a user report. */
     @Column(nullable = false, length = 20)
     private String source;
 

@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+/** Builds city and time-period summaries from the stored sightings. */
 @Service
 public class AnalyticsService
 {
@@ -30,7 +31,7 @@ public class AnalyticsService
         this.sightingRepository = sightingRepository;
     }
 
-    // count sightings per city
+    /** Merges city names that differ only by letter case and ignores blank names. */
     public List<CityCountDto> getSightingsByCity() {
 
         List<Object[]> cityCounts =
@@ -62,14 +63,14 @@ public class AnalyticsService
                 .toList();
     }
 
-    // calculate weekly or monthly trends
+    /** Groups records into ISO weeks or calendar months, optionally for one city. */
     public List<TrendPointDto> getSightingsTrends(
             String period,
             String location) {
 
         String normalizedPeriod = period == null ? "weekly" : period.trim().toLowerCase(Locale.ROOT);
 
-        // Validate the requested period
+        // Reject unsupported buckets so clients get a clear 400 response.
         if (!normalizedPeriod.equals("weekly") && !normalizedPeriod.equals("monthly"))
         {
 
@@ -79,7 +80,7 @@ public class AnalyticsService
             );
         }
 
-        // retrieve all sightings or sightings for one city
+        // Apply the location restriction in the repository when one is supplied.
         List<Sighting> sightings;
 
         if (location == null || location.isBlank())
@@ -96,6 +97,7 @@ public class AnalyticsService
 
         Map<String, Long> trendCounts = new TreeMap<>();
 
+        // ISO week-year handles dates near New Year that belong to a neighboring week-year.
         WeekFields weekFields = WeekFields.ISO;
 
         for (Sighting sighting : sightings)

@@ -18,11 +18,13 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 
+/** Converts common backend failures into a consistent JSON error response. */
 @RestControllerAdvice
 public class GlobalExceptionHandler
 {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /** Combines field validation messages into one client-readable response. */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
@@ -71,6 +73,7 @@ public class GlobalExceptionHandler
 
     }
 
+    /** Reports upstream failures as service unavailable while preserving a useful message. */
     @ExceptionHandler(ElancoApiException.class)
     public ResponseEntity<ApiErrorResponse> handleElancoFailure(
             ElancoApiException ex,
@@ -141,6 +144,7 @@ public class GlobalExceptionHandler
             String message,
             String path) {
 
+        // Keep the response shape consistent across all handled error types.
         ApiErrorResponse response = new ApiErrorResponse(
                 LocalDateTime.now(),
                 status.value(),

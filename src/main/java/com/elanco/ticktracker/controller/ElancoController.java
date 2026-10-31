@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/** Provides read-only access to the current Elanco API response. */
 @RestController
 @RequestMapping("/api/elanco")
 public class ElancoController

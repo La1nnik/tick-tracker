@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
+/** Validated input accepted when a user submits a new sighting. */
 public record SightingRequest
 (
         @NotNull(message = "Date is required")

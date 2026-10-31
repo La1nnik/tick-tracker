@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/** Exposes aggregated sighting counts and activity trends to the dashboard. */
 @RestController
 @RequestMapping("/api/analytics")
 public class AnalyticsController
@@ -24,7 +25,7 @@ public class AnalyticsController
         this.analyticsService = analyticsService;
     }
 
-    // Get number of sightings per city
+    /** Returns the number of stored sightings grouped by city. */
     @GetMapping("/cities")
     public List<CityCountDto> getCityAnalytics()
     {
@@ -32,7 +33,7 @@ public class AnalyticsController
         return analyticsService.getSightingsByCity();
     }
 
-    // Get weekly or monthly trends
+    /** Returns weekly or monthly counts, optionally limited to one location. */
     @GetMapping("/trends")
     public List<TrendPointDto> getTrends(
 

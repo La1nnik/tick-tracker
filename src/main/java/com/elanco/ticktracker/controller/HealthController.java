@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/** Lightweight endpoint for checking whether the backend is responding. */
 @RestController
 public class HealthController
 {

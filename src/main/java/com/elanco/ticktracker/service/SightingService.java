@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import java.time.LocalDateTime;
 
+/** Applies validation and persistence rules for imported and community sightings. */
 @Service
 public class SightingService
 {
@@ -33,6 +34,7 @@ public class SightingService
             }
         }
 
+        // User reports get their own ID and a source label distinct from imported data.
         Sighting sighting = new Sighting(
                 UUID.randomUUID().toString(),
                 request.date(),
@@ -54,19 +56,19 @@ public class SightingService
 
     public ImportSummary importElancoSightings() {
 
-        // get the data from Elanco
+        // Fetch once, then count every rejected record as skipped for the summary.
         List<TickSightingDto> externalSightings =
                 elancoApiClient.getAllSightings();
 
         int imported = 0;
         int skipped = 0;
 
-        //also catch duplicate ids within the same api response
+        // Track IDs in the response as well as checking IDs already stored in H2.
         Set<String> processedIds = new HashSet<>();
 
         for (TickSightingDto dto : externalSightings) {
 
-            // skip incomplete records which have  missing essential fields
+            // Required fields must be present before the record can satisfy the entity constraints.
             if (dto.id() == null || dto.id().isBlank()
                     || dto.date() == null
                     || dto.location() == null
@@ -77,13 +79,13 @@ public class SightingService
                 continue;
             }
 
-            // skip duplicate records within this response
+            // Ignore repeated records in a single upstream response.
             if (!processedIds.add(dto.id())) {
                 skipped++;
                 continue;
             }
 
-            // skip records that are already in the database
+            // Make repeat imports safe by preserving records that were imported earlier.
             if (sightingRepository.existsById(dto.id())) {
                 skipped++;
                 continue;
@@ -120,6 +122,7 @@ public class SightingService
             String location,
             String species) {
 
+        // Reject reversed bounds rather than silently returning an empty result.
         if (fromDate != null && toDate != null
                 && fromDate.isAfter(toDate)) {
             throw new IllegalArgumentException(
@@ -127,6 +130,7 @@ public class SightingService
             );
         }
 
+        // Blank filters mean "no restriction"; trim values before repository matching.
         String normalizedLocation =
                 location == null || location.isBlank()
                         ? null : location.trim();

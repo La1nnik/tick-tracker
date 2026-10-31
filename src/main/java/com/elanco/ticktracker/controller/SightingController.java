@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 
+/** HTTP endpoints for searching, creating, and importing sighting records. */
 @RestController
 @RequestMapping("/api/sightings")
 public class SightingController
@@ -34,12 +35,14 @@ public class SightingController
         this.sightingService = sightingService;
     }
 
+    /** Imports new Elanco records and reports received, imported, and skipped totals. */
     @PostMapping("/import")
     public  SightingService.ImportSummary importSightings()
     {
         return sightingService.importElancoSightings();
     }
 
+    /** Optional filters can be combined; date values use ISO local date-time format. */
     @GetMapping
     public List<Sighting> getSightings(
             @RequestParam(required = false)
@@ -65,6 +68,7 @@ public class SightingController
     }
 
 
+    /** Validates a community report and responds with the created record. */
     @PostMapping
     public ResponseEntity<Sighting> createSighting(
             @Valid @RequestBody SightingRequest request) {

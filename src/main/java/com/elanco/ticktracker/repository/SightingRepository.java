@@ -10,9 +10,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
+/** Database queries for sighting search and dashboard aggregates. */
 public interface SightingRepository
         extends JpaRepository<Sighting, String> {
 
+    // Date bounds are inclusive; location and species are case-insensitive exact matches.
     @Query("""
         SELECT s FROM Sighting s
         WHERE (:fromDate IS NULL OR s.date >= :fromDate)
@@ -27,9 +29,7 @@ public interface SightingRepository
             @Param("location") String location,
             @Param("species") String species
     );
-
-
-
+    // Return raw city/count pairs for normalization and DTO mapping in AnalyticsService.
     @Query("""
     SELECT s.location, COUNT(s)
     FROM Sighting s

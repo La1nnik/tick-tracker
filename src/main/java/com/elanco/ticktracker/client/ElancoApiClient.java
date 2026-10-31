@@ -13,6 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 
+/** Owns the HTTP integration with Elanco and translates transport errors for the app. */
 @Service
 public class ElancoApiClient
 {
@@ -27,11 +28,13 @@ public class ElancoApiClient
     {
         try
         {
+            // A typed response lets RestClient deserialize the JSON array into DTOs.
             List<TickSightingDto> sightings = restClient.get()
                     .uri("/data/tick-sightings").retrieve().body(new ParameterizedTypeReference<List<TickSightingDto>>()
                     {
                     });
 
+            // Treat an empty response body as no records, not as a null service result.
             return sightings == null ? List.of() : sightings;
 
         } catch (RestClientResponseException ex)
