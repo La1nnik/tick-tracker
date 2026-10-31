@@ -46,6 +46,7 @@
             <a href="#sightings">Sightings</a>
             <a href="#insights">Insights</a>
             <a href="#education">Education</a>
+            <a href="#report">Report a sighting</a>
         </nav>
 
     </div>
@@ -562,6 +563,100 @@
             </div>
 
         </div>
+
+    </section>
+
+
+
+    <!-- Report a sighting -->
+    <section class="panel report-section" id="report">
+
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">COMMUNITY CONTRIBUTIONS</p>
+                <h2>Report a tick sighting</h2>
+                <p class="report-intro">
+                    Help us understand tick activity across the UK
+                    by sharing a sighting.
+                </p>
+            </div>
+        </div>
+
+        <form id="reportForm" class="report-form">
+
+            <div class="form-group">
+                <label for="reportDate">Date and time of sighting *</label>
+                <input
+                        type="datetime-local"
+                        id="reportDate"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="reportLocation">Location / City *</label>
+                <input
+                        type="text"
+                        id="reportLocation"
+                        placeholder="e.g. London"
+                        maxlength="120"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="reportSpecies">Tick species *</label>
+                <input
+                        type="text"
+                        id="reportSpecies"
+                        placeholder="e.g. Sheep or deer tick"
+                        maxlength="120"
+                        required
+                >
+                <small>
+                    Enter the common species name if known.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="reportLatinName">
+                    Scientific name
+                </label>
+                <input
+                        type="text"
+                        id="reportLatinName"
+                        placeholder="e.g. Ixodes ricinus"
+                        maxlength="255"
+                >
+                <small>
+                    This field is optional if you do not know the
+                    scientific name.
+                </small>
+            </div>
+
+            <div class="report-submit-row">
+
+                <button
+                        type="submit"
+                        class="primary-button"
+                        id="submitReportButton">
+                    Submit sighting
+                </button>
+
+                <p class="required-note">
+                    * Required fields
+                </p>
+
+            </div>
+
+            <p
+                    id="reportMessage"
+                    class="form-feedback"
+                    role="status"
+                    aria-live="polite">
+            </p>
+
+        </form>
 
     </section>
 

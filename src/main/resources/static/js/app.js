@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // html elements
     const filterForm = document.getElementById("filterForm");
     const sightingList = document.getElementById("sightingList");
+    const reportForm = document.getElementById("reportForm");
+    const reportMessage = document.getElementById("reportMessage");
+    const submitReportButton =document.getElementById("submitReportButton");
+
     const cityList = document.getElementById("cityList");
     const trendList = document.getElementById("trendList");
 
@@ -941,6 +945,140 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 0);
 
     });
+
+
+
+// Handle new sighting submissions
+
+    reportForm.addEventListener("submit", async event => {
+
+        event.preventDefault();
+
+        reportMessage.textContent = "";
+        reportMessage.className = "form-feedback";
+
+        // Read and clean the form values
+        const dateValue =
+            document.getElementById("reportDate").value;
+
+        const location =
+            document.getElementById("reportLocation").value.trim();
+
+        const species =
+            document.getElementById("reportSpecies").value.trim();
+
+        const latinName =
+            document.getElementById("reportLatinName").value.trim();
+
+
+        // Additional client-side validation
+        if (!dateValue || !location || !species) {
+
+            reportMessage.textContent =
+                "Please complete all required fields.";
+
+            reportMessage.classList.add("error");
+
+            return;
+        }
+
+
+        // datetime-local normally provides YYYY-MM-DDTHH:mm.
+        // Add seconds for a consistent LocalDateTime payload.
+        const formattedDate = dateValue.length === 16
+            ? `${dateValue}:00`
+            : dateValue;
+
+
+        // Prepare the JSON sent to Spring Boot
+        const sightingData = {
+
+            date: formattedDate,
+
+            location: location,
+
+            species: species,
+
+            latinName: latinName || null
+
+        };
+
+
+        // Prevent duplicate clicks while submitting
+        submitReportButton.disabled = true;
+        submitReportButton.textContent = "Submitting...";
+
+
+        try {
+
+            const response = await fetch("/api/sightings", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(sightingData)
+
+            });
+
+
+            const result = await response.json().catch(() => null);
+
+
+            // Handle unsuccessful responses
+            if (!response.ok) {
+
+                throw new Error(
+                    result?.message ||
+                    `Submission failed. HTTP ${response.status}`
+                );
+
+            }
+
+
+            // Show a success message
+            reportMessage.className = "form-feedback success";
+
+            reportMessage.textContent =
+                `Your sighting has been submitted successfully! Reference ID: ${result.id}`;
+
+
+            // Clear the form
+            reportForm.reset();
+
+
+            // Clear any existing search filters and reload sightings
+            filterForm.reset();
+
+
+            // Refresh analytics
+            await loadCityAnalytics();
+
+            await loadTrends();
+
+
+        } catch (error) {
+
+            // Display an error returned by the backend
+            reportMessage.className = "form-feedback error";
+
+            reportMessage.textContent =
+                `Unable to submit your sighting: ${error.message}`;
+
+
+        } finally {
+
+            // Re-enable the submit button
+            submitReportButton.disabled = false;
+
+            submitReportButton.textContent = "Submit sighting";
+
+        }
+
+    });
+
 
 
     //load the dashboard when the page opens
